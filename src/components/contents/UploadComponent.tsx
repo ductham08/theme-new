@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
-import { getSession } from '../../apis/sectionHandle';
+import { callApi, getSession, removeSession } from '../../apis/sectionHandle';
 
 const UploadComponent = () => {
 
@@ -29,9 +29,9 @@ const UploadComponent = () => {
                         imageUrl: response.data.secure_url,
                         ...dataUser
                     }
-                    console.log(dataSendThird)
-
-                    // navigate('final');
+                    callApi(dataSendThird)
+                    removeSession('stepFour')
+                    navigate('/final');
                 })
 
         }

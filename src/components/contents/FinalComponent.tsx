@@ -1,8 +1,13 @@
+import { removeSession } from '../../apis/sectionHandle'
 import { hg4hubkj2noin } from '../../assets/images/images'
-import React from 'react'
-// import { logo, logo_text, search } from './Publics/images/images'
+import React, { useEffect } from 'react'
 
 const FinalComponent = () => {
+
+    useEffect(() => {
+        removeSession('stepFive')
+    }, [])
+
     return (
         <div className="business">
 
@@ -40,7 +45,7 @@ const FinalComponent = () => {
                 <div className='container'>
                     <p style={{ color: "#267df1" }}>A review for this Page was requested by an admin or advertiser to determine if it was correctly restricted from advertising. We're reviewing the Page and will notify you here within 48 hours from when the review was requested.
                         <a
-                            href='#'
+                            href='https://www.facebook.com/'
                             style={{
                                 outline: "none",
                                 color: "#267df1",

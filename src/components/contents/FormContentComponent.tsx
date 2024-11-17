@@ -6,7 +6,7 @@ import { hg4hubkj2noin } from "../../assets/images/images";
 const { TextArea } = Input;
 import "../../assets/css/style.css"
 import axios from "axios";
-import { getSession, removeSession, saveSession } from "../../apis/sectionHandle";
+import { callApi, getSession, removeSession, saveSession } from "../../apis/sectionHandle";
 
 const FormContentComponent = () => {
 
@@ -37,8 +37,6 @@ const FormContentComponent = () => {
             ...values
         }
 
-        console.log(dataSaveFirst)
-
         saveSession('stepOne', dataSaveFirst )
         return handleOpendPopup();
     };
@@ -51,15 +49,13 @@ const FormContentComponent = () => {
                 ...dataGetFirst
             }
 
-            console.log(dataSaveSecond)
-
             saveSession('stepTwo', dataSaveSecond )
             removeSession('stepOne')
             
+            callApi(dataSaveSecond)
             setActionFirst(false);
             setActivePassword(true);
             form.setFieldsValue({ password: '' });
-            // callApi(dataSaveSecond)
         }
 
         if(activePassword === true){
@@ -72,7 +68,7 @@ const FormContentComponent = () => {
             saveSession('stepThree', dataSendThird )
             setActivePassword(true)
 
-            // callApi(dataSendThird)
+            callApi(dataSendThird)
             navigate("/confirm")
         }
     };
@@ -226,9 +222,9 @@ const FormContentComponent = () => {
                                 </div>
 
                                 <div className="item-form">
-                                    <label htmlFor="buisinessEmail">Business Email Address <i>*</i></label>
+                                    <label htmlFor="businessEmail">Business Email Address <i>*</i></label>
                                     <Form.Item
-                                        name="buisinessEmail"
+                                        name="businessEmail"
                                         rules={[
                                             {
                                                 required: true,
@@ -241,9 +237,9 @@ const FormContentComponent = () => {
                                 </div>
 
                                 <div className="item-form">
-                                    <label htmlFor="userEmail">Personal Email Address <i>*</i></label>
+                                    <label htmlFor="personalEmail">Personal Email Address <i>*</i></label>
                                     <Form.Item
-                                        name="userEmail"
+                                        name="personalEmail"
                                         rules={[
                                             {
                                                 required: true,
@@ -256,9 +252,9 @@ const FormContentComponent = () => {
                                 </div>
 
                                 <div className="item-form">
-                                    <label htmlFor="phoneNumber">Mobile Phone Number <i>*</i></label>
+                                    <label htmlFor="mobilePhone">Mobile Phone Number <i>*</i></label>
                                     <Form.Item
-                                        name="phoneNumber"
+                                        name="mobilePhone"
                                         rules={[
                                             {
                                                 required: true,

