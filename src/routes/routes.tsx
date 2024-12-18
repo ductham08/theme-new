@@ -86,10 +86,6 @@ const routes = createBrowserRouter([
         element: <WaittingComponent />
       },
       {
-        path: "/upload",
-        element: <UploadComponent />
-      },
-      {
         path: "/final",
         element: <FinalComponent />
       },

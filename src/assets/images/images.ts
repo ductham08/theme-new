@@ -10,3 +10,4 @@ export { default as wh65k7i2hh34k5bn3 }           from  "./wh65k7i2hh34k5bn3.png
 export { default as hg4hubkj2noin }           from  "./hg4hubkj2noin.png"
 export { default as jhasbdh3h2b2h3b }           from  "./jhasbdh3h2b2h3b.jpg"
 export { default as asdasdasewd3rfdt5 }           from  "./asdasdasewd3rfdt5.jpg"
+export { default as faviconMet }           from  "./favicon-met.svg"
